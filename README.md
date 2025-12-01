@@ -293,6 +293,7 @@ Opens the cron scheduler for the current user. You add schedules here (e.g., dai
 ```bash
 0 2 * * * tar -czf /backup/site-$(date +\%F).tar.gz /var/www/
 ```
+![alt text](Evidence/Capture17.PNG)
 
 **Explanation of schedule:**
 
@@ -309,6 +310,7 @@ This creates daily timestamped backups.
 ```bash
 crontab -l
 ```
+![alt text](Evidence/Capture18.PNG)
 
 **Explanation:**
 Lists all cron jobs for the current user.
@@ -321,6 +323,7 @@ Lists all cron jobs for the current user.
 systemctl status cron       # Ubuntu
 systemctl status crond      # RHEL/CentOS/Amazon Linux
 ```
+![alt text](Evidence/Capture19.PNG)
 
 **Explanation:**
 Verifies if the cron service is running or has any errors.
@@ -348,6 +351,7 @@ Opens nano editor to create/edit a shell script.
 #!/bin/bash
 find /var/log -type f -name "*.log" -mtime +7 -delete
 ```
+![alt text](Evidence/Capture20.PNG)
 
 **Explanation:**
 Deletes `.log` files older than **7 days** under `/var/log`.
@@ -362,6 +366,7 @@ if ! systemctl is-active --quiet nginx; then
     systemctl restart nginx
 fi
 ```
+![alt text](Evidence/Capture21.PNG)
 
 **Explanation:**
 
@@ -378,6 +383,7 @@ Useful for production environments.
 #!/bin/bash
 curl -Is http://localhost | head -n 1
 ```
+![alt text](Evidence/Capture22.PNG)
 
 **Explanation:**
 Sends a request to the local server and prints HTTP response.
@@ -394,6 +400,20 @@ chmod +x cleanup.sh
 **Explanation:**
 Allows the script to be run as a program.
 
+What does +x mean? (in very simple words)
+
++x adds execute permission to a file.
+
+x = execute
+
+// + = add the permission
+
+Before chmod +x
+
+The script is just a normal text file — you cannot run it.
+
+permission denied
+
 ---
 
 ## **Run the Script**
@@ -404,6 +424,8 @@ Allows the script to be run as a program.
 
 **Explanation:**
 Executes the script in the current directory.
+
+![alt text](Evidence/Capture23.PNG)
 
 ---
 
@@ -416,6 +438,7 @@ Executes the script in the current directory.
 ```bash
 ls -lh /var/log
 ```
+![alt text](Evidence/Capture24.PNG)
 
 **Explanation:**
 Shows all logs with sizes in human-readable format.
@@ -425,9 +448,10 @@ Shows all logs with sizes in human-readable format.
 ## **View Logs in Real Time**
 
 ```bash
-tail -f /var/log/syslog       # Ubuntu
-tail -f /var/log/messages     # CentOS/RHEL
+ journalctl -f
+
 ```
+![alt text](Evidence/Capture25.PNG)
 
 **Explanation:**
 Shows live logs as new events happen.
@@ -450,6 +474,7 @@ Useful for debugging service-specific issues (nginx, apache, ssh, etc).
 ```bash
 grep -i "error" /var/log/syslog
 ```
+![alt text](Evidence/Capture26.PNG)
 
 **Explanation:**
 Searches logs for text like “error”, ignoring case (`-i`).
@@ -459,11 +484,16 @@ Searches logs for text like “error”, ignoring case (`-i`).
 ## **Clear a Log File Safely (Without Deleting File)**
 
 ```bash
-sudo truncate -s 0 /var/log/syslog
+sudo journalctl --rotate
+sudo journalctl --vacuum-size=100M
 ```
+![alt text](Evidence/Capture27.PNG)
 
 **Explanation:**
 Makes log size zero but keeps permissions and file structure intact.
+
+journalctl --rotate	Start a new log file
+journalctl --vacuum-size=100M	Delete old logs until total is ≤100MB
 
 ---
 
@@ -476,6 +506,7 @@ Makes log size zero but keeps permissions and file structure intact.
 ```bash
 top
 ```
+![alt text](Evidence/Capture28.PNG)
 
 **Explanation:**
 Live view of CPU, memory usage, and running processes.
@@ -485,8 +516,11 @@ Live view of CPU, memory usage, and running processes.
 ## **More Advanced Process Monitor**
 
 ```bash
+sudo dnf install -y htop
+
 htop
 ```
+![alt text](Evidence/Capture29.PNG)
 
 **Explanation:**
 Interactive version of `top` (if installed) with colors and easy navigation.
@@ -520,6 +554,7 @@ Shows disk usage for all mounted filesystems.
 ```bash
 uptime
 ```
+![alt text](Evidence/Capture30.PNG)
 
 **Explanation:**
 Shows load average — useful to know if the server is overloaded.
@@ -555,6 +590,7 @@ Used daily by DevOps engineers during troubleshooting.
 ```bash
 sudo netstat -tulnp
 ```
+![alt text](Evidence/Capture31.PNG)
 
 **Explanation:**
 Shows which services are listening on which ports.
@@ -566,6 +602,7 @@ Shows which services are listening on which ports.
 ```bash
 sudo ss -tulnp
 ```
+![alt text](Evidence/Capture32.PNG)
 
 **Explanation:**
 Newer, faster version of netstat.
@@ -678,6 +715,7 @@ sudo nano /etc/ssh/sshd_config
 ```conf
 PermitRootLogin no
 ```
+![alt text](Evidence/Capture33.PNG)
 
 **Explanation:**
 Prevents direct root login → reduces risk of brute-force attacks.
@@ -689,6 +727,7 @@ Prevents direct root login → reduces risk of brute-force attacks.
 ```conf
 PasswordAuthentication no
 ```
+![alt text](Evidence/Capture34.PNG)
 
 **Explanation:**
 Only allow SSH key-based login → more secure.
@@ -700,6 +739,7 @@ Only allow SSH key-based login → more secure.
 ```conf
 Port 2222
 ```
+![alt text](Evidence/Capture35.PNG)
 
 **Explanation:**
 Avoids default port 22 — reduces automated attacks.
@@ -728,17 +768,42 @@ Used for **storage scaling**, adding disks **without downtime**.
 ```bash
 lsblk
 ```
+![alt text](Evidence/Capture36.PNG)
 
 **Explanation:**
 Helps identify the disk you want to use for LVM (e.g., /dev/xvdf).
 
 ---
+# ✅ **Install LVM2 on Amazon Linux 2023**
+
+
+```bash
+sudo dnf install -y lvm2
+```
+![alt text](Evidence/Capture37.PNG)
+
+After installation, verify:
+
+```bash
+pvcreate --version
+```
+
+Now you can use:
+
+```bash
+sudo pvcreate /dev/xvdf
+sudo vgcreate myvg /dev/xvdf
+sudo lvcreate -l 100%FREE -n mylv myvg
+```
 
 ## **Create a Physical Volume (PV)**
 
 ```bash
-sudo pvcreate /dev/xvdf
+sudo pvcreate /dev/nvme1n1
+
 ```
+![alt text](Evidence/Capture38.PNG)
+
 
 **Explanation:**
 Marks disk as usable by LVM.
@@ -748,11 +813,13 @@ Marks disk as usable by LVM.
 ## **Create a Volume Group (VG)**
 
 ```bash
-sudo vgcreate appvg /dev/xvdf
+sudo vgcreate appvg /dev/nvme1n1
+
 ```
+![alt text](Evidence/Capture39.PNG)
 
 **Explanation:**
-Creates a storage pool named `appvg`.
+This creates a VG named `appvg` using your attached 10GB disk.
 
 ---
 
@@ -761,6 +828,7 @@ Creates a storage pool named `appvg`.
 ```bash
 sudo lvcreate -L 10G -n applv appvg
 ```
+![alt text](Evidence/Capture40.PNG)
 
 **Explanation:**
 Creates a 10GB logical volume named `applv` inside `appvg`.
@@ -772,6 +840,7 @@ Creates a 10GB logical volume named `applv` inside `appvg`.
 ```bash
 sudo mkfs.ext4 /dev/appvg/applv
 ```
+![alt text](Evidence/Capture41.PNG)
 
 **Explanation:**
 Formats the LV with ext4 filesystem.
@@ -840,12 +909,39 @@ Displays allowed/blocked ports.
 
 ## **Using Firewalld (RHEL/CentOS/Amazon Linux)**
 
+## **1. Install firewalld**
+
+```bash
+sudo dnf install firewalld -y
+```
+![alt text](Evidence/Capture42.PNG)
+---
+
+## **2. Start and enable firewalld**
+
+```bash
+sudo systemctl start firewalld
+sudo systemctl enable firewalld
+```
+
+Check the status:
+
+```bash
+sudo systemctl status firewalld
+```
+![alt text](Evidence/Capture43.PNG)
+
+You should see it **active (running)**.
+
+
+
 ### **Allow services**
 
 ```bash
 sudo firewall-cmd --add-service=http --permanent
 sudo firewall-cmd --add-service=https --permanent
 ```
+![alt text](Evidence/Capture44.PNG)
 
 ### **Open a port**
 
@@ -859,6 +955,8 @@ sudo firewall-cmd --add-port=8080/tcp --permanent
 sudo firewall-cmd --reload
 ```
 
+![alt text](Evidence/Capture45.PNG)
+
 **Explanation:**
 Applies changes and activates new firewall rules.
 
@@ -868,46 +966,66 @@ Applies changes and activates new firewall rules.
 
 ---
 
-## **Create logrotate config file**
+### **1. Create the log directory**
 
 ```bash
-sudo nano /etc/logrotate.d/myapp
+sudo mkdir -p /var/log/myapp
+```
+
+* `-p` ensures the parent directories are created if missing.
+
+---
+
+### **2. Set correct ownership**
+
+Replace `ec2-user` with the user your app runs as (or `root` if the app runs as root):
+
+```bash
+sudo chown ec2-user:ec2-user /var/log/myapp
 ```
 
 ---
 
-## **Logrotate example configuration**
+### **3. (Optional) Create a sample log file**
 
-```conf
+```bash
+sudo touch /var/log/myapp/myapp.log
+sudo chown ec2-user:ec2-user /var/log/myapp/myapp.log
+```
+
+* This allows you to **test logrotate immediately**.
+
+---
+
+### **4. Fix your logrotate config**
+
+Edit `/etc/logrotate.d/myapp` and make sure:
+
+```text
 /var/log/myapp/*.log {
     daily
     rotate 7
     compress
     missingok
     notifempty
-    create 0640 ubuntu ubuntu
+    create 0644 ec2-user ec2-user
 }
 ```
 
-**Explanation:**
+* `missingok` → avoids errors if logs don’t exist yet.
+* `create` → ensures rotated logs are created with proper ownership.
 
-* **daily** → rotate log every day
-* **rotate 7** → keep last 7 backups
-* **compress** → compress old logs with .gz
-* **missingok** → avoid errors if file doesn’t exist
-* **notifempty** → don’t rotate empty logs
-* **create 0640** → create new log file with permissions
-
+![alt text](Evidence/Capture46.PNG)
 ---
 
-## **Test logrotate configuration**
+### **5. Test logrotate**
 
 ```bash
-sudo logrotate -d /etc/logrotate.d/myapp
+sudo logrotate -v /etc/logrotate.d/myapp
 ```
+![alt text](Evidence/Capture47.PNG)
 
-**Explanation:**
-Dry-run to check for errors (no real rotation).
+You should see it processing the log files without errors.
 
 ---
 

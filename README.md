@@ -20,6 +20,10 @@
 ```bash
 sudo groupadd devteam
 ```
+![alt text](Evidence/Capture.PNG)
+
+![alt text](Evidence/Capture1.PNG)
+
 
 **Explanation:**
 Creates a group named `devteam`.
@@ -33,6 +37,7 @@ Groups allow easy permission management for multiple users.
 sudo useradd john
 ```
 
+
 **Explanation:**
 Creates a user account named `john`.
 Note: No home directory created yet.
@@ -44,6 +49,11 @@ Note: No home directory created yet.
 ```bash
 sudo useradd -m -s /bin/bash -G devteam john
 ```
+
+![alt text](Evidence/Capture2.PNG)
+
+![alt text](Evidence/Capture4.PNG)
+
 
 **Explanation of options:**
 
@@ -60,6 +70,9 @@ This is the recommended method for dev users.
 ```bash
 sudo usermod -aG devteam john
 ```
+
+![alt text](Evidence/Capture5.PNG)
+
 
 **Explanation:**
 Adds user `john` to the group `devteam` without removing existing group memberships.
@@ -86,6 +99,8 @@ Creates a directory under `/opt`, commonly used for applications.
 ```bash
 sudo chown john:devteam /opt/projectA
 ```
+![alt text](Evidence/Capture6.PNG)
+
 
 **Explanation:**
 Makes **john** the owner and **devteam** the group owner of the folder.
@@ -97,6 +112,8 @@ Makes **john** the owner and **devteam** the group owner of the folder.
 ```bash
 sudo chmod 770 /opt/projectA
 ```
+
+![alt text](Evidence/Capture7.PNG)
 
 **Explanation (permissions):**
 
@@ -111,8 +128,10 @@ Suitable for private dev-team folders.
 ## **Give Read-Only Access to Others**
 
 ```bash
-sudo chmod 755 /opt/projectA
+sudo chmod 775 /opt/projectA
 ```
+![alt text](Evidence/Capture8.PNG)
+
 
 **Explanation:**
 
@@ -131,8 +150,9 @@ Use for public or web-accessible directories.
 
 ```bash
 sudo apt update -y      # Ubuntu/Debian
-sudo yum update -y      # RHEL/CentOS/Amazon Linux
+sudo dnf update -y      # Amazon Linux
 ```
+
 
 **Explanation:**
 Refreshes package list to install the latest versions.
@@ -142,8 +162,10 @@ Refreshes package list to install the latest versions.
 ## **Install Git**
 
 ```bash
-sudo apt install -y git
+sudo dnf install -y git
 ```
+![alt text](Evidence/Capture9.PNG)
+
 
 **Explanation:**
 Installs Git (version control tool).
@@ -155,9 +177,21 @@ Installs Git (version control tool).
 ```bash
 sudo apt install -y nginx
 ```
+![alt text](Evidence/Capture10.PNG)
 
 **Explanation:**
 Installs Nginx web server (commonly used in DevOps).
+
+## **Start and Enable Nginx**
+
+```bash
+sudo systemctl start nginx
+sudo systemctl enable nginx
+sudo systemctl status nginx
+
+```
+
+![alt text](Evidence/Capture11.PNG)
 
 ---
 
@@ -166,6 +200,7 @@ Installs Nginx web server (commonly used in DevOps).
 ```bash
 sudo apt install -y openjdk-11-jdk
 ```
+![alt text](Evidence/Capture12.PNG)
 
 **Explanation:**
 Installs Java Development Kit (JDK) version 11.
@@ -182,6 +217,8 @@ Installs Java Development Kit (JDK) version 11.
 lscpu
 ```
 
+![alt text](Evidence/Capture13.PNG)
+
 **Explanation:**
 Shows CPU model, cores, threads, and architecture.
 
@@ -192,6 +229,7 @@ Shows CPU model, cores, threads, and architecture.
 ```bash
 free -h
 ```
+![alt text](Evidence/Capture14.PNG)
 
 **Explanation:**
 Displays RAM usage in human-readable form.
@@ -203,6 +241,7 @@ Displays RAM usage in human-readable form.
 ```bash
 df -h
 ```
+![alt text](Evidence/Capture15.PNG)
 
 **Explanation:**
 Shows mount points and free/used disk space.
@@ -225,6 +264,7 @@ Shows connected disks, partitions, and mount structure.
 ```bash
 cat /etc/os-release
 ```
+![alt text](Evidence/Capture16.PNG)
 
 **Explanation:**
 Displays Linux distribution name and version.

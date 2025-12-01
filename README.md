@@ -1,7 +1,7 @@
 # Linux-demo
 
 ## Level-01
--  Setting up Users & Groups for Dev Team
+## 1.Setting up Users & Groups for Dev Team
 
 - Create a New Group
 ```bash

@@ -1,196 +1,237 @@
-# Linux-demo
 
-## Level-01
-## 1.Setting up Users & Groups for Dev Team
+# **Level 1 – Basic (Foundational Skills)**
 
-- Create a New Group
+### ✔ Set up users, groups for dev team
+
+### ✔ Manage permissions for project directories
+
+### ✔ Install required packages (git, nginx, java)
+
+### ✔ Check system info (memory, CPU, disks)
+
+---
+
+# **1. Set Up Users & Groups for Dev Team**
+
+---
+
+## **Create a New Group**
+
 ```bash
 sudo groupadd devteam
-
-#Explanation:
-Creates a new group named devteam. Groups help manage permissions for multiple users at once.
 ```
-- Create a New User
+
+**Explanation:**
+Creates a group named `devteam`.
+Groups allow easy permission management for multiple users.
+
+---
+
+## **Create a New User**
+
 ```bash
 sudo useradd john
-
-#Explanation:
-Creates a user named john.
-This will NOT create a home directory by default.
-
 ```
 
-- Create a User with Home Directory, Shell, and Add to Group
+**Explanation:**
+Creates a user account named `john`.
+Note: No home directory created yet.
+
+---
+
+## **Create User with Home Directory, Shell & Add to Group**
+
 ```bash
 sudo useradd -m -s /bin/bash -G devteam john
-
-
-#Explanation of flags:
-
--m → creates a home directory /home/john
-
--s /bin/bash → assigns Bash shell to the user
-
--G devteam → adds user to the devteam group
-
-This is the proper way to create dev users.
 ```
-- Add an Existing User to a Group
+
+**Explanation of options:**
+
+* **`-m`** → creates home directory `/home/john`
+* **`-s /bin/bash`** → sets default shell
+* **`-G devteam`** → adds user to group
+
+This is the recommended method for dev users.
+
+---
+
+## **Add an Existing User to a Group**
+
 ```bash
 sudo usermod -aG devteam john
-
-
-#Explanation:
-
-usermod → modify an existing user
-
--aG → append user to a group without removing existing groups
-Adds john to devteam.
 ```
 
-- Switch to User
-```bash
-su - john
+**Explanation:**
+Adds user `john` to the group `devteam` without removing existing group memberships.
 
-#Explanation:
-Switches to john’s account and loads their environment (- loads .bashrc, PATH, etc.)
-```
+---
 
-## 2. Manage Permissions for Project Directories
+# **2. Manage Permissions for Project Directories**
 
-- Create Project Directory
+---
+
+## **Create a Project Directory**
 
 ```bash
 sudo mkdir /opt/projectA
-
-#Explanation:
-Creates a directory named projectA under /opt, commonly used for application files.
 ```
-- Change Ownership to Specific User & Group
+
+**Explanation:**
+Creates a directory under `/opt`, commonly used for applications.
+
+---
+
+## **Assign Ownership to User & Group**
 
 ```bash
 sudo chown john:devteam /opt/projectA
-
-#Explanation:
-Makes:
-
-john the owner
-
-devteam the group owner
-
-Only they can control the directory.
-```
- - Give Group Read/Write/Execute Permissions
- ```bash
- sudo chmod 770 /opt/projectA
-
- #Explanation of permission 770:
-
-Owner: full access (7)
-
-Group: full access (7)
-
-Others: no access (0)
-
-Use when only dev team should access the folder.
 ```
 
-- Give Read-Only Access to Others
+**Explanation:**
+Makes **john** the owner and **devteam** the group owner of the folder.
+
+---
+
+## **Give Full Access to Owner & Group**
+
+```bash
+sudo chmod 770 /opt/projectA
+```
+
+**Explanation (permissions):**
+
+* Owner: read, write, execute
+* Group: read, write, execute
+* Others: no access
+
+Suitable for private dev-team folders.
+
+---
+
+## **Give Read-Only Access to Others**
+
 ```bash
 sudo chmod 755 /opt/projectA
-
-#Explanation:
-
-Owner & group: full access
-
-Others: read + execute (can view, not edit)
-
-Used for public web content, scripts, etc.
 ```
 
-## 3. Install Required Packages (Git, Nginx, Java)
+**Explanation:**
 
-- Update Package Index
+* Owner & group: full access
+* Others: read + execute (can view files)
+
+Use for public or web-accessible directories.
+
+---
+
+# **3. Install Required Packages (Git, Nginx, Java)**
+
+---
+
+## **Update Package Index**
+
 ```bash
-sudo apt update -y     # Ubuntu/Debian
-sudo yum update -y     # RHEL/CentOS/Amazon Linux
-
-#Explanation:
-Refreshes the list of available packages so the latest versions can be installed.
+sudo apt update -y      # Ubuntu/Debian
+sudo yum update -y      # RHEL/CentOS/Amazon Linux
 ```
 
-- Install Git
+**Explanation:**
+Refreshes package list to install the latest versions.
+
+---
+
+## **Install Git**
+
 ```bash
 sudo apt install -y git
-
-#Explanation:
-Installs Git version control.
--y answers “yes” automatically.
 ```
 
-- Install Nginx
+**Explanation:**
+Installs Git (version control tool).
+
+---
+
+## **Install Nginx**
+
 ```bash
 sudo apt install -y nginx
-
-#Explanation:
-Installs the Nginx web server.
 ```
 
-- Install Java
+**Explanation:**
+Installs Nginx web server (commonly used in DevOps).
+
+---
+
+## **Install Java**
+
 ```bash
 sudo apt install -y openjdk-11-jdk
+```
 
-#Explanation:
+**Explanation:**
 Installs Java Development Kit (JDK) version 11.
 
-## 4. Check System Info (Memory, CPU, Disk)
-- Check CPU Info
+---
+
+# **4. Check System Info (Memory, CPU, Disks)**
+
+---
+
+## **Check CPU Information**
+
 ```bash
 lscpu
-
-
-#Explanation:
-Shows CPU model, cores, threads, architecture — important for sizing servers.
 ```
 
-- Check Memory Usage
+**Explanation:**
+Shows CPU model, cores, threads, and architecture.
+
+---
+
+## **Check Memory Usage**
+
 ```bash
 free -h
-
-
-#Explanation:
-Shows total, used, and free RAM.
--h = human readable (MB/GB).
 ```
 
+**Explanation:**
+Displays RAM usage in human-readable form.
 
-- Check Disk Usage
+---
+
+## **Check Disk Usage**
+
 ```bash
 df -h
-
-
-#Explanation:
-Shows usage of all mounted disks and partitions.
-Helps identify full disks.
 ```
 
-- List Block Devices
+**Explanation:**
+Shows mount points and free/used disk space.
+
+---
+
+## **List Storage Devices**
+
 ```bash
 lsblk
-
-
-#Explanation:
-Shows all storage devices like disks, partitions, volumes in a tree format.
 ```
 
-- Check OS Version
+**Explanation:**
+Shows connected disks, partitions, and mount structure.
+
+---
+
+## **Check OS Version**
+
 ```bash
 cat /etc/os-release
-
-
-#Explanation:
-Displays Linux distribution name, version, and other details — useful for troubleshooting.
 ```
+
+**Explanation:**
+Displays Linux distribution name and version.
+
+---
+
+
 
 # **Level 2 – Intermediate (Daily DevOps Tasks)**
 
